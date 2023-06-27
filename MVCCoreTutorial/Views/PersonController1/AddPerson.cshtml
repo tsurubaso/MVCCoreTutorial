@@ -1,0 +1,30 @@
+﻿@model MVCCoreTutorial.Models.Domain.Person
+@{
+
+   // Layout = "_Layout1";
+}
+<div class="mt-2" style="width:50%">
+<form asp-action="AddPerson">
+    <h2>Add Person</h2>
+    <div class="mb-3">
+        <label asp-for="Name"  class="form-label">Name</label>
+        <input asp-for="Name" type="text" class="form-control" id="name" aria-describedby="emailHelp">
+        
+    </div>
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">Email</label>
+        <input asp-for="Email" type="text" class="form-control" id="email">
+    </div>
+
+    @if (TempData["msg"]!=null)
+        {
+            <div class="mb-3">
+              @TempData["msg"]
+            </div>
+            
+        }
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <a href="" class="btn btn-primary">All Persons</a>
+</form>
+</div>
