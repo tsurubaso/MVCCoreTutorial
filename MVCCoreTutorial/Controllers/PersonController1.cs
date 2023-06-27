@@ -1,10 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using MVCCoreTutorial.Models.Domain;
 
 namespace MVCCoreTutorial.Controllers
 {
     public class PersonController1 : Controller
     {
+        private readonly DatabaseContext _ctx;
+        public PersonController1(DatabaseContext ctx)
+        {
+            _ctx=ctx;
+        } 
         public IActionResult Index()
             
         {
@@ -31,8 +37,28 @@ namespace MVCCoreTutorial.Controllers
                 return View();
             
             }
-            TempData["msg"] = "Added";
-            return View();
+            try
+            {
+                _ctx.Add(person);
+                _ctx.SaveChanges();
+
+                TempData["msg"] = "Added succesffully";
+                return RedirectToAction("AddPerson");
+            }
+            catch (Exception ex)
+            {
+                TempData["msg"] = "Could not Add";
+                return View();
+            }
+            
+            
+        }
+
+
+        public IActionResult DisplayPerson()
+        {
+            var persons = _ctx.Persons.ToList();
+            return View(persons);
         }
     }
 }
