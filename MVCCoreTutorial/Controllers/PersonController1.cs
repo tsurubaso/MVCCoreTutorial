@@ -35,6 +35,7 @@ namespace MVCCoreTutorial.Controllers
             if(!ModelState.IsValid) 
             {
                 return View();
+                Console.WriteLine("problem");
             
             }
             try
@@ -54,10 +55,13 @@ namespace MVCCoreTutorial.Controllers
             
         }
 
+      
 
-        public IActionResult DisplayPerson()
+
+        public IActionResult DisplayPersons()
         {
             var persons = _ctx.Persons.ToList();
+            Console.WriteLine(persons);
             return View(persons);
         }
     }
