@@ -9,10 +9,10 @@ namespace MVCCoreTutorial.Controllers
         private readonly DatabaseContext _ctx;
         public PersonController1(DatabaseContext ctx)
         {
-            _ctx=ctx;
-        } 
+            _ctx = ctx;
+        }
         public IActionResult Index()
-            
+
         {
             ViewBag.greetings = "hello";
             ViewData["greetings2"] = "hello2";
@@ -20,27 +20,27 @@ namespace MVCCoreTutorial.Controllers
             return View();
         }
 
-        public IActionResult AddPerson() 
-        
-        { 
-        
-            return View();
-        
-        }
-        [HttpPost]
-        public IActionResult AddPerson(Person person  ) 
-        
+        public IActionResult AddPerson()
+
         {
 
-            if(!ModelState.IsValid) 
+            return View();
+
+        }
+        [HttpPost]
+        public IActionResult AddPerson(Person person)
+
+        {
+
+            if (!ModelState.IsValid)
             {
                 return View();
                 Console.WriteLine("problem");
-            
+
             }
             try
             {
-                _ctx.Add(person);
+                _ctx.Persons.Add(person); //ici j'ajoute: .Persons.
                 _ctx.SaveChanges();
 
                 TempData["msg"] = "Added succesffully";
@@ -51,18 +51,71 @@ namespace MVCCoreTutorial.Controllers
                 TempData["msg"] = "Could not Add";
                 return View();
             }
-            
-            
+
+
         }
 
-      
+
 
 
         public IActionResult DisplayPersons()
         {
             var persons = _ctx.Persons.ToList();
-            Console.WriteLine(persons);
+
             return View(persons);
+        }
+        [HttpGet]
+        public IActionResult EditPerson(int id)
+        {
+            var person = _ctx.Persons.Find(id);
+            if (person == null)
+            {
+                return NotFound();
+            }
+            return View(person);
+        }
+
+        [HttpPost]
+        public IActionResult EditPerson(Person person)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(person);
+            }
+
+            try
+            {
+                _ctx.Persons.Update(person);
+                _ctx.SaveChanges();
+                return RedirectToAction("DisplayPersons");
+            }
+            catch (Exception ex)
+            {
+                TempData["msg"] = "Could not update";
+                return View(person);
+            }
+        }
+
+
+
+
+        public IActionResult DeletePerson(int id)
+        {
+            try
+            {
+                var person = _ctx.Persons.Find(id);
+                if (person != null)
+                {
+                    _ctx.Persons.Remove(person);
+                    _ctx.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return RedirectToAction("DisplayPersons");
         }
     }
 }
